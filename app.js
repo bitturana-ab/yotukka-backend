@@ -26,7 +26,8 @@ app.use(cookieParser());
 // For local testing → allow all origins
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5174", // Vite frontend URL
+    credentials: true, // allow cookies / JWT headers
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
