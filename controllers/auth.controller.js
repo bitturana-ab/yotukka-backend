@@ -11,7 +11,7 @@ export const signup = async (req, res, next) => {
   session.startTransaction();
 
   try {
-    const { name, email, password, address, phone } = req.body;
+    const { name, email, phone } = req.body;
     let user = await User.findOne({ email }).session(session);
 
     // If user already exists -> sign in instead
@@ -26,11 +26,8 @@ export const signup = async (req, res, next) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user = await User.create(
-      [{ name, email, password: hashedPassword, address, phone }],
-      { session }
-    );
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    user = await User.create([{ name, email, phone }], { session });
 
     const token = jwt.sign({ userId: user[0]._id }, process.env.JWT_SECRET, {
       expiresIn: "365d",

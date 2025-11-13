@@ -18,22 +18,6 @@ const UserSchema = new Schema(
       unique: true,
       match: [/\S+@\S+\.\S+/, "Please provide a valid email"],
     },
-    password: {
-      type: String,
-      required: [true, "Please provide a password"],
-      minlength: 6,
-    },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-    address: {
-      type: String,
-      required: [true, "Please provide an address"],
-      minlength: 3,
-      maxlength: 255,
-    },
     phone: {
       type: String,
       required: [true, "Please provide a phone number"],
@@ -42,10 +26,28 @@ const UserSchema = new Schema(
         "Please provide a valid phone number",
       ],
     },
-    otp: { type: String },
-    otpExpires: { type: Date },
-
-    // Cart items array (embedded or referenced)
+    password: {
+      type: String,
+      minlength: 6,
+      default: null,
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    address: {
+      type: String,
+      default: null,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpires: {
+      type: Date,
+      default: null,
+    },
     cart: [
       {
         productId: {
@@ -59,8 +61,6 @@ const UserSchema = new Schema(
         },
       },
     ],
-
-    // Orders reference array
     orders: [
       {
         type: Schema.Types.ObjectId,
