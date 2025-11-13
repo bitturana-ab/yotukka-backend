@@ -26,7 +26,7 @@ app.use(cookieParser());
 // For local testing → allow all origins
 app.use(
   cors({
-    origin: "http://localhost:5174", // Vite frontend URL
+    origin: "https://yotukka.com", // Vite frontend URL for testing
     credentials: true, // allow cookies / JWT headers
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -51,6 +51,6 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🔥 Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 export default app;
