@@ -7,8 +7,8 @@ import { orderTemplate, orderStatusTemplate } from "../utils/emailTemplates.js";
 export const getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.find()
-      .populate("user")
-      .populate("products.product");
+      .populate("user", "name email")
+      .populate("products.product", "name price");
     res.status(200).json({ success: true, data: orders });
   } catch (error) {
     next(error);
@@ -18,9 +18,10 @@ export const getAllOrders = async (req, res, next) => {
 // Get order by ID
 export const getOrderById = async (req, res, next) => {
   try {
-    const order = await Order.findById(req.params.id).populate(
-      "user products.product"
-    );
+    const order = await Order.findById(req.params.id).populate([
+      "user",
+      "products.product",
+    ]);
     if (!order)
       return res
         .status(404)
@@ -32,24 +33,22 @@ export const getOrderById = async (req, res, next) => {
   }
 };
 
-// Create new order
+// Create order
 export const createOrder = async (req, res, next) => {
   try {
-    const { user, products, totalAmount, status, shippingAddress, username } =
-      req.body;
+    const { user, products, totalAmount, shippingAddress, username } = req.body;
 
     const order = await Order.create({
       user,
       products,
       totalAmount,
-      status,
       shippingAddress,
       username,
     });
 
     const userDoc = await User.findById(user);
     if (userDoc)
-      sendMail(
+      await sendMail(
         userDoc.email,
         `Order Confirmation #${order._id}`,
         orderTemplate(username, order._id, products, totalAmount)
@@ -61,14 +60,14 @@ export const createOrder = async (req, res, next) => {
   }
 };
 
-// Update order status
+// Update order (status) by admin only
 export const updateOrder = async (req, res, next) => {
   try {
     const { status } = req.body;
     const order = await Order.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!order)
@@ -78,21 +77,23 @@ export const updateOrder = async (req, res, next) => {
 
     const userDoc = await User.findById(order.user);
     if (userDoc)
-      sendMail(
+      await sendMail(
         userDoc.email,
-        `Order #${order._id} Status Updated`,
+        `Order #${order._id} Status Update`,
         orderStatusTemplate(order.username, order._id, status)
       );
 
-    res
-      .status(200)
-      .json({ success: true, message: "Order updated", data: order });
+    res.status(200).json({
+      success: true,
+      message: "Order status updated",
+      data: order,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete (cancel) order
+// Cancel order
 export const cancelOrder = async (req, res, next) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
@@ -107,7 +108,7 @@ export const cancelOrder = async (req, res, next) => {
   }
 };
 
-// Get all orders for a user
+// Get orders by user
 export const getOrdersByUserId = async (req, res, next) => {
   try {
     const orders = await Order.find({ user: req.params.id }).populate(
