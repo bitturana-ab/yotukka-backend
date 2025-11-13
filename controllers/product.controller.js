@@ -1,6 +1,6 @@
 import Product from "../models/product.model.js";
 
-// ✅ Get all products
+// Get all products
 export const getProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
@@ -10,7 +10,7 @@ export const getProducts = async (req, res, next) => {
   }
 };
 
-// ✅ Get single product
+// Get single product
 export const getProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -25,7 +25,7 @@ export const getProduct = async (req, res, next) => {
   }
 };
 
-// ✅ Create new product
+// Create new product
 export const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, category, stock, imageUrl } = req.body;
@@ -43,7 +43,7 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
-// ✅ Update product
+// Update product
 export const updateProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -63,7 +63,7 @@ export const updateProduct = async (req, res, next) => {
   }
 };
 
-// ✅ Delete product
+// Delete product
 export const deleteProduct = async (req, res, next) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
@@ -78,7 +78,7 @@ export const deleteProduct = async (req, res, next) => {
   }
 };
 
-// ✅ Get products by filters
+// Get products by filters
 export const getProductByCategory = async (req, res, next) => {
   try {
     const products = await Product.find({ category: req.params.category });

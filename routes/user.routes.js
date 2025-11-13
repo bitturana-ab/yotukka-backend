@@ -1,23 +1,23 @@
 import { Router } from "express";
 import * as users from "../controllers/user.controller.js";
-import authorization from "../middlewares/auth.middleware.js";
-import adminauthorization from "../middlewares/admin.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
 
 const userrouter = Router();
 
 // Admin: Get all users
-userrouter.get("/", adminauthorization, users.getUsers);
+userrouter.get("/", adminMiddleware, users.getUsers);
 
 // Authorized user: Get single user
-userrouter.get("/:id", authorization, users.getUser);
+userrouter.get("/:id", authMiddleware, users.getUser);
 
-// Admin: Create user
-userrouter.post("/", adminauthorization, users.createUser);
+// Admin: Create user now it will be disable
+userrouter.post("/", adminMiddleware, users.createUser);
 
 // Authorized user: Update user
-userrouter.put("/:id", authorization, users.updateUser);
+userrouter.put("/:id", authMiddleware, users.updateUser);
 
 // Authorized user: Delete user
-userrouter.delete("/:id", authorization, users.deleteUser);
+userrouter.delete("/:id", authMiddleware, users.deleteUser);
 
 export default userrouter;

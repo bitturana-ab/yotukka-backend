@@ -1,5 +1,5 @@
 import { Router } from "express";
-import adminauthorization from "../middlewares/admin.middleware.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
 import {
   getProducts,
   getProduct,
@@ -10,19 +10,21 @@ import {
   getProductByName,
   getProductByPrice,
 } from "../controllers/product.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const productroutes = Router();
 
-// Public Routes
+// user routes
+// get products will be public
 productroutes.get("/", getProducts);
 productroutes.get("/name/:name", getProductByName);
 productroutes.get("/price/:price", getProductByPrice);
 productroutes.get("/category/:category", getProductByCategory);
 productroutes.get("/:id", getProduct);
 
-// Admin Routes
-productroutes.post("/", adminauthorization, createProduct);
-productroutes.put("/:id", adminauthorization, updateProduct);
-productroutes.delete("/:id", adminauthorization, deleteProduct);
+// Admin Routes for managing products
+productroutes.post("/", adminMiddleware, createProduct);
+productroutes.put("/:id", adminMiddleware, updateProduct);
+productroutes.delete("/:id", adminMiddleware, deleteProduct);
 
 export default productroutes;

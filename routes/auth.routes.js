@@ -3,23 +3,24 @@ import * as authentication from "../controllers/auth.controller.js";
 import User from "../models/user.model.js";
 import twilio from "twilio/lib/rest/Twilio.js";
 import jwt from "jsonwebtoken";
-import optmiddelware from "../middlewares/optauth.middleware.js";
+import optmiddelware from "../middlewares/otpauth.middleware.js";
 import {
   TWILIO_PHONE_NUMBER,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   JWT_SECRET,
 } from "../config/env.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const authrouter = Router();
 const client = new twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-// 🔹 Authentication Routes
-authrouter.post("/signup", authentication.signup);
-authrouter.post("/signin", authentication.signin);
-authrouter.post("/signout", authentication.signout);
+// Authentication Routes
+authrouter.post("/signup", authMiddleware, authentication.signup);
+authrouter.post("/signin", authMiddleware, authentication.signin);
+authrouter.post("/signout", authMiddleware, authentication.signout);
 
-// 🔹 Send OTP
+// Send OTP
 authrouter.post("/send-otp", async (req, res) => {
   const { phone, name, email, password, address } = req.body;
   const otp = Math.floor(100000 + Math.random() * 900000);
@@ -59,7 +60,7 @@ authrouter.post("/send-otp", async (req, res) => {
   }
 });
 
-// 🔹 Verify OTP
+// Verify OTP
 authrouter.post("/verify-otp", async (req, res) => {
   const { phone, otp } = req.body;
 
@@ -86,12 +87,10 @@ authrouter.post("/verify-otp", async (req, res) => {
       data: { token, user },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: `Error verifying OTP: ${error.message}`,
-      });
+    res.status(500).json({
+      success: false,
+      message: `Error verifying OTP: ${error.message}`,
+    });
   }
 });
 

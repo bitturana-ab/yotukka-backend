@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
-// Get all users
+// Get all users for admin
 export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find().select("-password");
