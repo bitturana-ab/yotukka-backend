@@ -6,13 +6,13 @@ import { adminMiddleware } from "../middlewares/admin.middleware.js";
 const userrouter = Router();
 
 // Admin: Get all users
-userrouter.get("/", adminMiddleware, users.getUsers);
+userrouter.get("/", authMiddleware, adminMiddleware, users.getUsers);
 
 // Authorized user: Get single user
 userrouter.get("/:id", authMiddleware, users.getUser);
 
 // Admin: Create user now it will be disable
-userrouter.post("/", adminMiddleware, users.createUser);
+userrouter.post("/", authMiddleware, adminMiddleware, users.createUser);
 
 // Authorized user: Update user
 userrouter.put("/:id", authMiddleware, users.updateUser);

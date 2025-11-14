@@ -23,8 +23,8 @@ productroutes.get("/category/:category", getProductByCategory);
 productroutes.get("/:id", getProduct);
 
 // Admin Routes for managing products
-productroutes.post("/", adminMiddleware, createProduct);
-productroutes.put("/:id", adminMiddleware, updateProduct);
-productroutes.delete("/:id", adminMiddleware, deleteProduct);
+productroutes.post("/", authMiddleware, adminMiddleware, createProduct);
+productroutes.put("/:id", authMiddleware, adminMiddleware, updateProduct);
+productroutes.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);
 
 export default productroutes;
