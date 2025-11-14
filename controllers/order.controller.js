@@ -1,7 +1,11 @@
 import Order from "../models/order.model.js";
 import User from "../models/user.model.js";
 import { sendMail } from "../utils/mail.js";
-import { orderTemplate, orderStatusTemplate } from "../utils/emailTemplates.js";
+import {
+  orderTemplate,
+  orderStatusTemplate,
+  adminOrderTemplate,
+} from "../utils/emailTemplates.js";
 
 // Get all orders
 export const getAllOrders = async (req, res, next) => {
@@ -53,6 +57,22 @@ export const createOrder = async (req, res, next) => {
         `Order Confirmation #${order._id}`,
         orderTemplate(username, order._id, products, totalAmount)
       );
+
+    // 4. Send mail to Admin
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "kk82350108@gmail.com"; // change this
+
+    await sendMail(
+      ADMIN_EMAIL,
+      `New Order Received #${order._id}`,
+      adminOrderTemplate(
+        username,
+        userDoc?.email,
+        order._id,
+        products,
+        totalAmount,
+        shippingAddress
+      )
+    );
 
     res.status(201).json({ success: true, data: order });
   } catch (error) {

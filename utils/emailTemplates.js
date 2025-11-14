@@ -262,3 +262,37 @@ export const orderTemplate = (username, orderId, products, totalAmount) => {
   </html>
   `;
 };
+
+// admin email to notify order came
+export const adminOrderTemplate = (
+  username,
+  userEmail,
+  orderId,
+  products,
+  totalAmount,
+  shippingAddress
+) => {
+  return `
+    <h2>New Order Received</h2>
+
+    <p><strong>Order ID:</strong> ${orderId}</p>
+    <p><strong>Customer:</strong> ${username}</p>
+    <p><strong>Email:</strong> ${userEmail}</p>
+
+    <h3>Products</h3>
+    <ul>
+      ${products
+        .map(
+          (p) => `<li>${p.name} — Qty: ${p.quantity} — ₹${p.price} each</li>`
+        )
+        .join("")}
+    </ul>
+
+    <p><strong>Total Amount:</strong> ₹${totalAmount}</p>
+
+    <h3>Shipping Address</h3>
+    <p>${shippingAddress}</p>
+
+    <p style="margin-top:20px;">Go check admin dashboard for more details.</p>
+  `;
+};
