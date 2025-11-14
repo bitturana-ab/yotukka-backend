@@ -16,7 +16,7 @@ export const signup = async (req, res, next) => {
 
     // If user already exists -> sign in instead
     if (user) {
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: "365d",
       });
       return res.status(200).json({
@@ -65,7 +65,7 @@ export const signin = async (req, res, next) => {
         .status(400)
         .json({ success: false, message: "Invalid credentials" });
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "365d",
     });
     res.status(200).json({
