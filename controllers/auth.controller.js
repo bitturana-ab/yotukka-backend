@@ -107,8 +107,8 @@ passport.use(
           user = await User.create({
             name,
             email,
-            phone: "",
-            address: "",
+            phone: null,
+            address: null,
             password: null, // Google users don’t have password
             signupType: "google",
           });
