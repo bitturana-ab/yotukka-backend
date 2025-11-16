@@ -36,6 +36,11 @@ const UserSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    signUpType: {
+      type: String,
+      enum: ["google", "manual"], // allowed values
+      default: "manual", // normal signup
+    },
     address: {
       type: String,
       default: null,
@@ -68,6 +73,7 @@ const UserSchema = new Schema(
       },
     ],
   },
+
   { timestamps: true }
 );
 
