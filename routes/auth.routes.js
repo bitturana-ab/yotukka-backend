@@ -3,6 +3,8 @@ import * as authentication from "../controllers/auth.controller.js";
 import User from "../models/user.model.js";
 // import twilio from "twilio/lib/rest/Twilio.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import passport from "passport";
+import { googleAuthSuccess } from "../controllers/auth.controller.js";
 
 const authrouter = Router();
 // const client = new twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
@@ -11,6 +13,19 @@ const authrouter = Router();
 authrouter.post("/signup", authentication.signup);
 authrouter.post("/signin", authentication.signin);
 authrouter.post("/signout", authMiddleware, authentication.signout);
+
+// Start Google Login
+authrouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// Google Callback
+authrouter.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  googleAuthSuccess
+);
 
 // Send OTP
 // authrouter.post("/send-otp", async (req, res) => {
