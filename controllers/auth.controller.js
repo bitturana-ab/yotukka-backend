@@ -142,6 +142,6 @@ export const googleAuthSuccess = async (req, res) => {
 
     res.redirect(redirectURL);
   } catch (error) {
-    res.redirect(`${process.env.CLIENT_URL}/login?error=1`);
+    res.redirect(`${process.env.CLIENT_URL}/signup?error=1`);
   }
 };
