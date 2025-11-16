@@ -20,9 +20,6 @@ const UserSchema = new Schema(
     },
     phone: {
       type: String,
-      required: function () {
-        return this.signupType !== "google";
-      },
       match: [
         /^(\+\d{1,3}[- ]?)?\d{10}$/,
         "Please provide a valid phone number",
